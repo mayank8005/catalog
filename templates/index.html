@@ -8,6 +8,8 @@
     </script>
     <script src="//apis.google.com/js/platform.js?onload=start"> </script>
     <!-- setting title of the page -->
+    <!-- adding our own javascript -->
+    <script src="{{url_for('static',filename='catalog.js')}}"></script>
     <title>Catalog</title>
   </head>
   <body>
@@ -18,7 +20,7 @@
       </div>
       <!-- heading area ends-->
       <!-- login/logout area-->
-      <div>
+      <div id='login_area'>
         {% if login is True %}
           <div id="signinButton">
             <span class="g-signin"
@@ -42,8 +44,8 @@
     <!-- category section/ nav bar -->
     <nav>
     </nav>
-    <!-- top items area/section -->
-    <section>
+    <!-- content area -->
+    <section id="content_panel">
 
     </section>
   </body>
