@@ -12,9 +12,9 @@ class Items(Base):
     __tablename__ = 'items'
 
     # declaration of table attributes
-    id = Column(Integer, primary_key=True)   # used as primary key
+    # using item name as primary key
+    item_name = Column(String(256), primary_key=True)  # store name of item
     category = Column(String(100), nullable=False)  # predefined category
-    item_name = Column(String(256), nullable=False)     # stores name of item
     item_description = Column(String(500))     # stores description of item
     user_id = Column(Integer, ForeignKey('users.id'))  # stores uploader's id
     users = relationship(Users)
