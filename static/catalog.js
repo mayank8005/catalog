@@ -9,7 +9,7 @@ function signInCallback(authResult) {
         back to the main restaurants page*/
         $.ajax({
             type: 'POST',
-            url: '/gconnect?state={{STATE}}',
+            url: '/gconnect?state=STATE',
             processData: false,
             data: authResult['code'],
             contentType: 'application/octet-stream; charset=utf-8',
