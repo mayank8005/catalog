@@ -1,6 +1,7 @@
-from flask import Flask, request, make_response, render_template
+from flask import Flask, request, make_response, render_template, url_for
 from flask import session as login_session
 import random
+from database import ItemsDatabase
 import string
 import json
 import httplib2
@@ -18,6 +19,9 @@ CLIENT_ID = json.loads(open("client_secret.json").read())['web']['client_id']
 
 # init Flask instance
 app = Flask(__name__)
+
+# making object of ItemsDatabase class
+database = ItemsDatabase()
 
 
 # it init session variable when client is first connected
@@ -37,11 +41,14 @@ def start_session():
 def index():
     login = is_login()
     session_state = login_session['session']
-    print(login)
+    # getting 10 latest items
+    items = database.get_latest()
     if login is True:
-        return render_template('index.html', STATE=session_state)
+        return render_template('index.html', STATE=session_state,
+                               categories=CATEGORIES, items=items)
     else:
-        return render_template('public_index.html', STATE=session_state)
+        return render_template('public_index.html', STATE=session_state,
+                               categories=CATEGORIES, items=items)
 
 
 # display's items belonging to one of the categories

@@ -33,10 +33,30 @@
     </header>
     <!-- category section/ nav bar -->
     <nav>
+      <ul>
+        {% for category in categories %}
+        <li>
+          <a href='{{ url_for('show_items',
+          category=category)}}'> {{category}}</a>
+        </li>
+        {% endfor %}
+      </ul>
     </nav>
     <!-- content area -->
     <section id="content_panel">
-
+      {% if not items %}
+      No items
+      {% else %}
+      <ul>
+        {% for item in items %}
+        <li>
+          <a href="{{url_for('show_item',
+          category=item.category,
+          item=item.name)}}">{{item.name}} ({{item.category}})</a>
+        </li>
+        {% endfor %}
+        {% endif %}
+      </ul>
     </section>
   </body>
 </html>
