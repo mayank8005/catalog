@@ -7,7 +7,6 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
     </script>
     <script src="//apis.google.com/js/platform.js?onload=start"> </script>
-    <!-- setting title of the page -->
     <!-- init state variable -->
     <script>
       var STATE = '{{STATE}}'
@@ -25,8 +24,16 @@
       <!-- heading area ends-->
       <!-- login/logout area-->
       <div id='login_area'>
-          <div>
-            <button id="logout" onclick="signOutGoogleAcc()">Logout</button>
+          <div id="signinButton">
+            <span class="g-signin"
+              data-scope="openid email"
+              data-clientid="534877455642-qqt7buqso4e7858h0udl7efppj3haahe.apps.googleusercontent.com"
+              data-redirecturi="postmessage"
+              data-accesstype="offline"
+              data-cookiepolicy="single_host_origin"
+              data-callback="signInCallback"
+              data-approvalprompt="force">
+            </span>
           </div>
       </div>
       <!-- login/logout area ends-->
