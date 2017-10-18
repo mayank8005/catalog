@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+    <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+    <!-- setting title of the page -->
+    <!-- init state variable -->
+    <script>
+      var STATE = '{{STATE}}'
+    </script>
+    <!-- adding our own javascript -->
+    <script src="{{url_for('static',filename='catalog.js')}}"></script>
+    <title>{{item.name}}</title>
+  </head>
+  <body>
+    <header>
+      <!-- Heading  area-->
+      <div>
+        <h1>{{item.name}}</h1>
+      </div>
+      <!-- heading area ends-->
+      <!-- login/logout area-->
+      <div id='login_area'>
+          <div>
+            <button id="logout" onclick="signOutGoogleAcc()">Logout</button>
+          </div>
+      </div>
+      <!-- login/logout area ends-->
+    </header>
+    <!-- category section/ nav bar -->
+    <nav>
+      <ul>
+        {% for category in categories %}
+        <li>
+          <a href='{{ url_for('show_items',
+          category=category)}}'> {{category}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <!-- content area -->
+    <section id="content_panel">
+      <h2>item.name</h2><br>
+      <h3>category: item.category</h3><br>
+      <h3>description</h3>
+      item.description
+    </section>
+  </body>
+</html>

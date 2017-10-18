@@ -74,7 +74,16 @@ def show_items(category):
 # item (variable in url): defines particular item
 @app.route('/catalog/<string:category>/<string:item>/')
 def show_item(category, item):
-    return 'showing ' + item + ' which belongs to ' + category
+    login = is_login()
+    session_state = login_session['session']
+    # getting all items of that category
+    current_item = database.get_item(item)
+    if login is True:
+        return render_template('item.html', STATE=session_state,
+                               categories=CATEGORIES, item=current_item)
+    else:
+        return render_template('public_item.html', STATE=session_state,
+                               categories=CATEGORIES, items=current_item)
 
 
 # adds item in our catalog application
@@ -183,7 +192,18 @@ def gconnect():
     login_session['email'] = data['email']
 
     # TODO: add user table database action here
-
+    # check if user already exist in our database
+    if database.check_id(email=login_session['email']) is True:
+        # user exist so we are getting user id
+        login_session['user_id'] = database.get_user(login_session['email'])
+    else:
+        # user does not exist
+        # so we create user in our database and store user id
+        login_session['user_id'] = database.add_user(name=login_session['name'],
+                                                     email=login_session[
+                                                         'email'],
+                                                     picture=login_session[
+                                                         'picture']).id
     # TODO: add flash msh functionality here
 
     response = make_response(json.dumps('user logged in'), 200)
@@ -207,6 +227,7 @@ def gdisconnect():
     if result['status'] == '200':
         # deleting user data stored in session
         del login_session['access_token']
+        del login_session['user_id']
         del login_session['username']
         del login_session['picture']
         del login_session['gplus_id']
@@ -224,7 +245,7 @@ def gdisconnect():
 # returns True if user is logged in
 # returns False in vice versa condition
 def is_login():
-    if login_session.get('username', None) is not None and \
+    if login_session.get('user_id', None) is not None and \
                     login_session.get('access_token', None) is not None:
         print(login_session['username'])
         return True

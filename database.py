@@ -130,7 +130,7 @@ class ItemsDatabase:
             return True         # user exist
 
     def add_user(self, name, email, picture):
-        """add user in our database
+        """add user in our database and returns user
         :parameter email: email of user
         :parameter name: name of user
         :parameter picture: url of profile picture of user
@@ -138,6 +138,7 @@ class ItemsDatabase:
         user = Users(name=name, email=email, picture=picture)
         self.session.add(user)
         self.session.commit()
+        return user
 
     def get_user(self, email):
         """returns user item having particular email
