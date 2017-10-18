@@ -1,4 +1,5 @@
-from flask import Flask, request, make_response, render_template, url_for
+from flask import Flask, request, make_response, render_template, url_for, \
+    redirect
 from flask import session as login_session
 import random
 from database import ItemsDatabase
@@ -83,13 +84,40 @@ def show_item(category, item):
                                categories=CATEGORIES, item=current_item)
     else:
         return render_template('public_item.html', STATE=session_state,
-                               categories=CATEGORIES, items=current_item)
+                               categories=CATEGORIES, item=current_item)
 
 
 # adds item in our catalog application
-@app.route('/catalog/add/')
+@app.route('/catalog/add/', methods=['GET', 'POST'])
 def add_item():
-    return 'will add items'
+    # handling GET request
+    if request.method == 'GET':
+        # checking for login
+        if is_login() is False:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+        return render_template('add_new.html', categories=CATEGORIES)
+    # handling post request
+    else:
+        # checking for login
+        if is_login() is False:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+        # user is logged in
+        # extracting form entries
+        name = request.form['name']
+        description = request.form['description']
+        category = request.form['category']
+
+        # trying to create item
+        created = database.add_item(name=name,
+                                    category=category,
+                                    description=description,
+                                    user_id=login_session['user_id'])
+        # TODO: checking false condition
+
+        # redirecting user to item page
+        return redirect(url_for('show_item', category=category, item=name))
 
 
 # This method will edit particular item of our catalog application
@@ -199,11 +227,12 @@ def gconnect():
     else:
         # user does not exist
         # so we create user in our database and store user id
-        login_session['user_id'] = database.add_user(name=login_session['name'],
-                                                     email=login_session[
-                                                         'email'],
-                                                     picture=login_session[
-                                                         'picture']).id
+        login_session['user_id'] = database.add_user(
+            name=login_session['username'],
+            email=login_session[
+                'email'],
+            picture=login_session[
+                'picture']).id
     # TODO: add flash msh functionality here
 
     response = make_response(json.dumps('user logged in'), 200)

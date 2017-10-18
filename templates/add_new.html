@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add item</title>
+  </head>
+  <body>
+    <header>
+      <!-- Heading  area-->
+        <h1>add item</h1>
+      <!-- heading area ends-->
+    </header>
+    <!-- category section/ nav bar -->
+    <!-- content area -->
+    <section id="content_panel">
+      <!-- form for adding item -->
+      <form method="post">
+
+        <!-- name entry -->
+        <label for="name">Name: </label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+
+        <!-- description entry -->
+        <label for="description">description: </label>
+        <textarea id="description" name="description" required></textarea>
+        <br><br>
+
+        <!-- category -->
+        <label for="category">category</label>
+        <select name="category" id="category" required>
+          {% for category in categories %}
+            <option value="{{category}}">{{category}}</option>
+          {% endfor %}
+        </select>
+        <br><br>
+
+        <!-- submit -->
+        <input type="submit" name="add">
+      </form>
+    </section>
+  </body>
+</html>
