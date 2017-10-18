@@ -37,6 +37,7 @@ def start_session():
 def index():
     login = is_login()
     session_state = login_session['session']
+    print(login)
     if login is True:
         return render_template('index.html', STATE=session_state)
     else:
@@ -79,7 +80,7 @@ def delete_item(item):
 
 
 # this method will exchange short term google oauth access token for long term
-# access token
+# access token and set user's login details
 # This method only support post request
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -171,11 +172,43 @@ def gconnect():
     return response
 
 
+# This method disconnects user google acc and make that access token invalid
+@app.route('/gdisconnect/', methods=['POST'])
+def gdisconnect():
+    access_token = login_session.get('access_token', None)
+    # if true currently no user connected
+    if access_token is None:
+        response = make_response(json.dumps("No user connected"), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # logging out user
+    url = 'https://accounts.google.com/o/oauth2/revoke?token={}'.format(
+        access_token)
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    if result['status'] == '200':
+        # deleting user data stored in session
+        del login_session['access_token']
+        del login_session['username']
+        del login_session['picture']
+        del login_session['gplus_id']
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+
 # This methods check if user is logged in or not
 # returns True if user is logged in
 # returns False in vice versa condition
 def is_login():
-    if login_session.get('username', None) is not None:
+    if login_session.get('username', None) is not None and \
+                    login_session.get('access_token', None) is not None:
+        print(login_session['username'])
         return True
     else:
         return False
