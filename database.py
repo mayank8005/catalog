@@ -22,7 +22,7 @@ class ItemsDatabase:
         """This method returns list of 10 most recently inserted items"""
         try:
             latest_items = self.session.query(Items).order_by(
-             Items.id.desc()).limit(10).all()
+             Items.time_created.desc()).limit(10).all()
         except NoResultFound:
             latest_items = None
         return latest_items
