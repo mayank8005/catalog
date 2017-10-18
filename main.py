@@ -55,7 +55,18 @@ def index():
 # category (variables in url): specifies category
 @app.route('/catalog/<string:category>/items/')
 def show_items(category):
-    return 'showing items from ' + category + ' category'
+    login = is_login()
+    session_state = login_session['session']
+    # getting all items of that category
+    items = database.get_items(category=category)
+    if login is True:
+        return render_template('items.html', STATE=session_state,
+                               categories=CATEGORIES, items=items,
+                               current_category=category)
+    else:
+        return render_template('public_items.html', STATE=session_state,
+                               categories=CATEGORIES, items=items,
+                               current_category=category)
 
 
 # display's more info about particular item in the list
