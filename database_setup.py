@@ -13,9 +13,10 @@ class Items(Base):
 
     # declaration of table attributes
     # using item name as primary key
-    item_name = Column(String(256), primary_key=True)  # store name of item
+    id = Column(Integer, autoincrement=True, nullable=False, unique=True)
+    name = Column(String(256), primary_key=True)  # store name of item
     category = Column(String(100), nullable=False)  # predefined category
-    item_description = Column(String(500))     # stores description of item
+    description = Column(String(500))     # stores description of item
     user_id = Column(Integer, ForeignKey('users.id'))  # stores uploader's id
     users = relationship(Users)
 
@@ -28,7 +29,7 @@ class Users(Base):
     # declaration of table attributes
     id = Column(Integer, primary_key=True)  # used as primary key
     name = Column(String(100), nullable=False)   # name of the user
-    email = Column(String(256))     # email of user
+    email = Column(String(256), nullable=False)     # email of user
     picture = Column(String(256))   # URL of user's profile picture
 
 # creating engine for sqlalchemy
