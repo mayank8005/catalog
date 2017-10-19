@@ -122,17 +122,94 @@ def add_item():
 
 # This method will edit particular item of our catalog application
 # item (variable in url): defines particular item stored in our database
-@app.route('/catalog/<string:item>/edit/')
+@app.route('/catalog/<string:item>/edit/', methods=['GET', 'POST'])
 def edit_item(item):
-    return 'edit item: ' + item
+
+    # getting item from database
+    item = database.get_item(name=item)
+    # if item not found
+    if item is None:
+        make_response('item not found', 404)
+
+    # handling GET request
+    if request.method == 'GET':
+        # checking for login
+        if is_login() is False:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+        # checking for authorization
+        if item.user_id != login_session['user_id']:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+        return render_template('edit_item.html',
+                               categories=CATEGORIES, item=item)
+    # handling post request
+    else:
+        # checking for login
+        if is_login() is False:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+
+        # checking for authorization
+        if item.user_id != login_session['user_id']:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+
+        #  user is logged in
+        # extracting form entries
+        name = request.form['name']
+        description = request.form['description']
+        category = request.form['category']
+
+        # updating item
+        # if update is successful updated is True else False
+        updated = database.edit_item(item=item, name=name,
+                                     description=description,
+                                     category=category)
+        # TODO: checking false condition
+
+        # redirecting user to item page
+        return redirect(url_for('show_items', category=category))
 
 
 # This method will delete particular item from our catalog application
 # item (variable in url): defines particular item stored in our database
-@app.route('/catalog/<string:item>/delete/')
+@app.route('/catalog/<string:item>/delete/', methods=['GET', 'POST'])
 def delete_item(item):
-    return 'delete item: ' + item
+    # getting item from database
+    item = database.get_item(name=item)
 
+    # if item not found
+    if item is None:
+        make_response('item not found', 404)
+    # handling GET request
+    if request.method == 'GET':
+        # checking for login
+        if is_login() is False:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+        # checking for authorization
+        if item.user_id != login_session['user_id']:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+        return render_template('delete_item.html', item=item)
+    # handling post request
+    else:
+        # checking for login
+        if is_login() is False:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+
+        # checking for authorization
+        if item.user_id != login_session['user_id']:
+            # return auth access error
+            return make_response('unauthorized access', 401)
+
+        # deleting item
+        database.delete_item(item.name)
+
+        # redirect to home page
+        return redirect('/')
 
 # this method will exchange short term google oauth access token for long term
 # access token and set user's login details
@@ -223,7 +300,7 @@ def gconnect():
     # check if user already exist in our database
     if database.check_id(email=login_session['email']) is True:
         # user exist so we are getting user id
-        login_session['user_id'] = database.get_user(login_session['email'])
+        login_session['user_id'] = database.get_user(login_session['email']).id
     else:
         # user does not exist
         # so we create user in our database and store user id
