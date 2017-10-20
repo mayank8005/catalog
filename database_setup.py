@@ -33,6 +33,16 @@ class Items(Base):
     user_id = Column(Integer, ForeignKey('users.id'))  # stores uploader's id
     users = relationship(Users)
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'name': self.name,
+            'category': self.category,
+            'description': self.description
+        }
+
+
 
 # creating engine for sqlalchemy
 engine = create_engine('sqlite:///catalog.db')
