@@ -1,0 +1,210 @@
+/* super property of page to remove unwanted padings and margin */
+
+* {
+margin: 0;
+padding: 0;
+}
+
+/* style for body */
+body{
+  background-image: url("background.jpg");
+  margin: 0px;
+  padding: 0px
+}
+
+/* style for header */
+header{
+
+  background-color: #333333;
+  color: #fff;
+  width: calc(100% - 50px);
+  padding: 25px;
+  margin-bottom: 20px;
+  opacity: 0.8;
+  border-bottom: 2px solid #EEEEEE;
+  min-height: 30px;
+}
+
+/* style for heading part */
+.heading{
+  display: inline-block;
+  padding-right: 50px;
+}
+
+.heading h1{
+  display: inline;
+}
+
+/* style for login part */
+.login_area{
+  display: inline-block;
+  float: right;
+}
+
+.login_button{
+  display: inline;
+  min-width: 50px;
+}
+
+/* navigation panael */
+nav{
+  background-color: #333333;
+  opacity: 0.8;
+  padding: 25px;
+  overflow: hidden;
+  border-top: 2px solid #EEEEEE;
+  border-bottom: 2px solid #EEEEEE
+}
+.nav_links{
+  display: inline;
+  padding: 25px;
+}
+
+.nav_links a{
+  color: #fff;
+  font-size: 20;
+  font-weight: bold;
+  text-decoration: none;
+}
+.nav_links:hover{
+  background-color: #00C853;
+}
+
+#toggle{
+  display: none;
+}
+
+#toggle_link{
+  display: none;
+}
+
+@media only screen and (max-width: 1284px){
+  .nav_links{
+    display: block;
+  }
+  nav{
+    display: none;
+    opacity: 0.9;
+    width: 100%;
+    position: absolute;
+  }
+
+  #toggle{
+    margin: 25px;
+    display: block;
+  }
+
+  #toggle_link{
+    display: block;
+    opacity: 0.8;
+  }
+
+  #toggle_link button{
+    min-width: 10%;
+    margin: 25px;
+  }
+}
+/* for flash msg */
+.flash {
+	background-color: #98FB98;
+	width:100%;
+	text-decoration: none;
+
+}
+
+.flash li {
+	list-style-type: none;
+	text-align: center;
+
+}
+
+/* dedicated for link which require authentication ex add new */
+.private_links{
+  opacity: 0.8;
+  background: #333333;
+  border-top: 2px solid #EEEEEE;
+  border-bottom: 2px solid #EEEEEE;
+  display: block;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  padding: 5px;
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.private_links:hover{
+  background-color: #00C853;
+}
+
+.private_links a{
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 500px){
+  .private_links{
+    margin: 0px;
+  }
+}
+
+/* content area style */
+.content_panel{
+  background-color: #333333;
+  opacity: 0.8;
+  border: 2px solid #EEEEEE;
+  color: #fff;
+  padding: 20px;
+  width: 50%;
+  margin-top: 10px;
+  margin-left: 25%;
+}
+
+.item-links{
+  text-align: right;
+}
+
+.item-links a{
+  color: #FFB300;
+  padding: 5px;
+}
+
+.content_panel ul{
+  list-style-type: none;
+}
+
+.content-list-item{
+  padding: 25px;
+}
+
+.content-list-item a{
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+
+}
+
+.content-list-item a:hover{
+  font-size: 30px;
+}
+
+@media only screen and (max-width: 500px){
+  .content_panel{
+        width: calc(100% - 4px);
+        padding-left: 0px;
+        padding-right: 0px;
+        border-radius: 0px;
+        border-left: 0;
+        margin-left: 0px;
+        margin-right: 0px;
+  }
+
+  .content-list-item{
+    padding-right: 0px;
+    padding-left: 0px;
+    margin: 0;
+  }
+}

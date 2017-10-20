@@ -14,42 +14,78 @@
     </script>
     <!-- adding our own javascript -->
     <script src="{{url_for('static',filename='catalog.js')}}"></script>
+    <!-- adding our css file -->
+    <link href="{{url_for('static',filename='mystyle.css')}}" rel="stylesheet">
     <title>Catalog</title>
   </head>
   <body>
+
     <header>
       <!-- Heading  area-->
-      <div>
+      <div class="heading">
         <h1>Catalog</h1>
       </div>
       <!-- heading area ends-->
       <!-- login/logout area-->
-      <div id='login_area'>
-          <div>
+      <div class='login_area'>
+          <div class="login_button">
             <button id="logout" onclick="signOutGoogleAcc()">Logout</button>
           </div>
       </div>
       <!-- login/logout area ends-->
     </header>
+
     <!-- category section/ nav bar -->
     <nav>
-      <ul>
+      <ul id="nav_list">
+        <li id="toggle_link">
+          <button onclick="hide_show_menu()">hide</button>
+        </li>
+        <li class="nav_links">
+          <a href='/'>HomePage</a>
+        </li>
         {% for category in categories %}
-        <li>
+        <li class="nav_links">
           <a href='{{ url_for('show_items',
           category=category)}}'> {{category}}</a>
         </li>
         {% endfor %}
       </ul>
     </nav>
+
+    <!-- section for toggle link -->
+    <section>
+      <button id="toggle" onclick="hide_show_menu()">Category</button>
+    </section>
+
+    <!-- section for flash msg -->
+    <section class = 'flash'>
+		     {% with messages = get_flashed_messages() %}
+          {% if messages %}
+
+            <ul>
+              {% for message in messages %}
+                <li> <strong> {{ message }} </strong> </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          {% endwith %}
+
+    </section>
+
+    <!-- this section is dedicated for link which require authentication -->
+    <section class="private_links">
+      <a href="/catalog/add">Add new item</a>
+    </section>
+
     <!-- content area -->
-    <section id="content_panel">
+    <section class="content_panel">
       {% if not items %}
       No items
       {% else %}
       <ul>
         {% for item in items %}
-        <li>
+        <li class="content-list-item">
           <a href="{{url_for('show_item',
           category=item.category,
           item=item.name)}}">{{item.name}} ({{item.category}})</a>

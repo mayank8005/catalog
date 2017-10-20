@@ -17,14 +17,15 @@
     <title>Catalog</title>
   </head>
   <body>
+
     <header>
       <!-- Heading  area-->
-      <div>
+      <div class="heading">
         <h1>Catalog</h1>
       </div>
       <!-- heading area ends-->
       <!-- login/logout area-->
-      <div id='login_area'>
+      <div class='login_area'>
           <div id="signinButton">
             <span class="g-signin"
               data-scope="openid email"
@@ -39,25 +40,38 @@
       </div>
       <!-- login/logout area ends-->
     </header>
+
     <!-- category section/ nav bar -->
     <nav>
-      <ul>
+      <ul id="nav_list">
+        <li id="toggle_link">
+          <button onclick="hide_show_menu()">hide</button>
+        </li>
+        <li class="nav_links">
+          <a href='/'>HomePage</a>
+        </li>
         {% for category in categories %}
-        <li>
+        <li class="nav_links">
           <a href='{{ url_for('show_items',
           category=category)}}'> {{category}}</a>
         </li>
         {% endfor %}
       </ul>
     </nav>
+
+    <!-- section for toggle link -->
+    <section>
+      <button id="toggle" onclick="hide_show_menu()">Category</button>
+    </section>
+
     <!-- content area -->
-    <section id="content_panel">
+    <section class="content_panel">
       {% if not items %}
       No items
       {% else %}
       <ul>
         {% for item in items %}
-        <li>
+        <li class="content-list-item">
           <a href="{{url_for('show_item',
           category=item.category,
           item=item.name)}}">{{item.name}} ({{item.category}})</a>
@@ -66,5 +80,6 @@
         {% endif %}
       </ul>
     </section>
+
   </body>
 </html>

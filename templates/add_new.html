@@ -3,17 +3,19 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- adding our css file -->
+    <link href="{{url_for('static',filename='mystyle.css')}}" rel="stylesheet">
     <title>add item</title>
   </head>
   <body>
     <header>
-      <!-- Heading  area-->
-        <h1>add item</h1>
-      <!-- heading area ends-->
+      <div class="heading">
+        <h1>Add item</h1>
+      </div>
     </header>
     <!-- category section/ nav bar -->
     <!-- content area -->
-    <section id="content_panel">
+    <section class="content_panel">
       <!-- form for adding item -->
       <form method="post">
 
@@ -37,7 +39,7 @@
         <br><br>
 
         <!-- submit -->
-        <input type="submit" name="add">
+        <input type="submit" value="add">
       </form>
     </section>
   </body>

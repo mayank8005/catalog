@@ -3,23 +3,27 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- adding our css file -->
+    <link href="{{url_for('static',filename='mystyle.css')}}" rel="stylesheet">
     <title>delete item</title>
   </head>
   <body>
+
     <header>
-      <!-- Heading  area-->
+      <div class="heading">
         <h1>delete item</h1>
-      <!-- heading area ends-->
+      </div>
     </header>
-    <!-- category section/ nav bar -->
+
     <!-- content area -->
-    <section id="content_panel">
+    <section class="content_panel">
       <!-- form for adding item -->
       <form method="post">
         Are you sure you want to delete {{item.name}}?<br><br>
         <!-- submit -->
-        <input type="submit" name="delete">
+        <input type="submit" value="delete">
       </form>
     </section>
+
   </body>
 </html>

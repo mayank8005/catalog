@@ -13,17 +13,20 @@
     </script>
     <!-- adding our own javascript -->
     <script src="{{url_for('static',filename='catalog.js')}}"></script>
+    <!-- adding our css file -->
+    <link href="{{url_for('static',filename='mystyle.css')}}" rel="stylesheet">
     <title>{{item.name}}</title>
   </head>
   <body>
+
     <header>
       <!-- Heading  area-->
-      <div>
+      <div class="heading">
         <h1>About item</h1>
       </div>
       <!-- heading area ends-->
       <!-- login/logout area-->
-      <div id='login_area'>
+      <div class='login_area'>
           <div id="signinButton">
             <span class="g-signin"
               data-scope="openid email"
@@ -38,23 +41,32 @@
       </div>
       <!-- login/logout area ends-->
     </header>
+
     <!-- category section/ nav bar -->
     <nav>
-      <ul>
+      <ul id="nav_list">
+        <li id="toggle_link">
+          <button onclick="hide_show_menu()">hide</button>
+        </li>
+        <li class="nav_links">
+          <a href='/'>HomePage</a>
+        </li>
         {% for category in categories %}
-        <li>
+        <li class="nav_links">
           <a href='{{ url_for('show_items',
           category=category)}}'> {{category}}</a>
         </li>
         {% endfor %}
       </ul>
     </nav>
+
     <!-- content area -->
-    <section id="content_panel">
-      <h2>{{item.name}}</h2><br>
-      <h3>category: {{item.category}}</h3><br>
-      <h3>description</h3>
-      {{item.description}}
+    <section class="content_panel">
+      <div>
+        <h2>{{item.name}}(category: {{item.category}})</h2><br>
+        <h3>description:</h3>
+        {{item.description}}
+      </div>
     </section>
   </body>
 </html>

@@ -53,3 +53,23 @@ function signOutGoogleAcc() {
             }
         });
 }
+
+// hide or show category menu list
+function hide_show_menu(){
+  $("nav").toggle();
+  $("section").toggle();
+}
+
+// restoring effect on normal size
+$(document).ready(function () {
+$(window).on('resize', function (e) {
+        if ($(window).width() > 1284) {
+            $('nav').show();
+            $('section').show();
+        }
+        else {
+          $('nav').hide();
+          $('section').show();
+        }
+  });
+});
