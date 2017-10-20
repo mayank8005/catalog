@@ -1,5 +1,5 @@
 from flask import Flask, request, make_response, render_template, url_for, \
-    redirect, flash
+    redirect, flash, jsonify
 from flask import session as login_session
 import random
 from database import ItemsDatabase
@@ -362,6 +362,16 @@ def gdisconnect():
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
+
+# API end point to get list of all items of particular category
+@app.route('/catalog/<string:item_cat>/JSON')
+def get_items_json(item_cat):
+    """returns list of items belonging to requested category in json format
+    @:parameter item_cat: item category
+    """
+    items = database.get_items(item_cat)
+    return jsonify(Items=[i.serialize for i in items])
 
 
 # This methods check if user is logged in or not
