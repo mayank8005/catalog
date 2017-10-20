@@ -1,5 +1,5 @@
 from flask import Flask, request, make_response, render_template, url_for, \
-    redirect
+    redirect, flash
 from flask import session as login_session
 import random
 from database import ItemsDatabase
@@ -41,6 +41,7 @@ def start_session():
 @app.route('/index')
 def index():
     login = is_login()
+    print(login)
     session_state = login_session['session']
     # getting 10 latest items
     items = database.get_latest()
@@ -77,11 +78,17 @@ def show_items(category):
 def show_item(category, item):
     login = is_login()
     session_state = login_session['session']
-    # getting all items of that category
+    # getting item from database
     current_item = database.get_item(item)
-    if login is True:
+    # checking authorization
+    auth = False
+    if current_item.user_id == login_session.get('user_id', ''):
+        auth = True
+
+    if login is True :
         return render_template('item.html', STATE=session_state,
-                               categories=CATEGORIES, item=current_item)
+                               categories=CATEGORIES, item=current_item,
+                               auth=auth)
     else:
         return render_template('public_item.html', STATE=session_state,
                                categories=CATEGORIES, item=current_item)
@@ -114,8 +121,11 @@ def add_item():
                                     category=category,
                                     description=description,
                                     user_id=login_session['user_id'])
-        # TODO: checking false condition
-
+        # checking item created or not
+        if created is True:
+            flash('item added')
+        else:
+            flash('item already exist')
         # redirecting user to item page
         return redirect(url_for('show_item', category=category, item=name))
 
@@ -166,7 +176,11 @@ def edit_item(item):
         updated = database.edit_item(item=item, name=name,
                                      description=description,
                                      category=category)
-        # TODO: checking false condition
+        #  checking item updated or not
+        if updated is True:
+            flash('item updated')
+        else:
+            flash('item name already exist. Please change item name')
 
         # redirecting user to item page
         return redirect(url_for('show_items', category=category))
@@ -210,6 +224,7 @@ def delete_item(item):
 
         # redirect to home page
         return redirect('/')
+
 
 # this method will exchange short term google oauth access token for long term
 # access token and set user's login details
@@ -296,7 +311,7 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-    # TODO: add user table database action here
+
     # check if user already exist in our database
     if database.check_id(email=login_session['email']) is True:
         # user exist so we are getting user id
@@ -310,7 +325,8 @@ def gconnect():
                 'email'],
             picture=login_session[
                 'picture']).id
-    # TODO: add flash msh functionality here
+    # add flash msg functionality here
+    flash('Welcome {}'.format(login_session['username']))
 
     response = make_response(json.dumps('user logged in'), 200)
     return response
@@ -339,6 +355,7 @@ def gdisconnect():
         del login_session['gplus_id']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
+        flash('user logged out')
         return response
     else:
         response = make_response(
