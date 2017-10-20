@@ -64,6 +64,21 @@
       <button id="toggle" onclick="hide_show_menu()">Category</button>
     </section>
 
+    <!-- section for flash msg -->
+    <section class = 'flash'>
+		     {% with messages = get_flashed_messages() %}
+          {% if messages %}
+
+            <ul>
+              {% for message in messages %}
+                <li> <strong> {{ message }} </strong> </li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+          {% endwith %}
+
+    </section>
+
     <!-- content area -->
     <section class="content_panel">
       {% if not items %}
