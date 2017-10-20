@@ -1,5 +1,6 @@
+#!/usr/bin/env python3
 from flask import Flask, request, make_response, render_template, url_for, \
-    redirect, flash, jsonify
+    redirect, flash, jsonify, abort
 from flask import session as login_session
 import random
 from database import ItemsDatabase
@@ -33,6 +34,16 @@ def start_session():
             random.choice(string.ascii_lowercase +
                           string.ascii_uppercase +
                           string.digits) for _ in range(32))
+
+    # checking for CSRF code
+    if request.method == "POST":
+        token = login_session.pop('_csrf_token', None)
+
+        if not token or (token != request.form.get(
+                '_csrf_token') and token != request.args.get('_csrf_token')):
+            print('csrf error')
+            print(request.form)
+            abort(403)
 
 
 # home/main page of our catalog application
@@ -85,7 +96,7 @@ def show_item(category, item):
     if current_item.user_id == login_session.get('user_id', ''):
         auth = True
 
-    if login is True :
+    if login is True:
         return render_template('item.html', STATE=session_state,
                                categories=CATEGORIES, item=current_item,
                                auth=auth)
@@ -134,7 +145,6 @@ def add_item():
 # item (variable in url): defines particular item stored in our database
 @app.route('/catalog/<string:item>/edit/', methods=['GET', 'POST'])
 def edit_item(item):
-
     # getting item from database
     item = database.get_item(name=item)
     # if item not found
@@ -165,7 +175,7 @@ def edit_item(item):
             # return auth access error
             return make_response('unauthorized access', 401)
 
-        #  user is logged in
+        # user is logged in
         # extracting form entries
         name = request.form['name']
         description = request.form['description']
@@ -221,6 +231,9 @@ def delete_item(item):
 
         # deleting item
         database.delete_item(item.name)
+
+        # setting flash msg
+        flash('item deleted')
 
         # redirect to home page
         return redirect('/')
@@ -311,7 +324,6 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-
     # check if user already exist in our database
     if database.check_id(email=login_session['email']) is True:
         # user exist so we are getting user id
@@ -333,7 +345,7 @@ def gconnect():
 
 
 # This method disconnects user google acc and make that access token invalid
-@app.route('/gdisconnect/', methods=['POST'])
+@app.route('/gdisconnect', methods=['POST'])
 def gdisconnect():
     access_token = login_session.get('access_token', None)
     # if true currently no user connected
@@ -386,9 +398,20 @@ def is_login():
         return False
 
 
+# This method generates CSRF token for protection against CSRF
+def generate_csrf_token():
+    if '_csrf_token' not in login_session:
+        login_session['_csrf_token'] = ''.join(
+            random.choice(string.ascii_lowercase +
+                          string.ascii_uppercase +
+                          string.digits) for _ in range(32))
+    return login_session['_csrf_token']
+
+
 # will run this part of code only when this file is executed directly
 # will not run if this file is imported to another module/script
 if __name__ == '__main__':
+    app.jinja_env.globals['csrf_token'] = generate_csrf_token
     app.secret_key = 'super_secret_key'
     port = 5000  # setting port no to listen request
     host = '0.0.0.0'  # setting host address

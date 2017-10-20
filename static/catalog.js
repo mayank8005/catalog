@@ -3,13 +3,13 @@ function signInCallback(authResult) {
         // Hide sign in button as user is authorized
 
         $('#signinButton').attr("style", 'display: none')
-        $('#content_panel').html('logging in please wait')
+        $('.content_panel:first').html('logging in please wait')
         /* Send the one-time-use code to the server, if the server responds,
         write a 'login successful message to the web page and then redirect
         back to the main restaurants page*/
         $.ajax({
             type: 'POST',
-            url: '/gconnect?state=' + STATE,
+            url: '/gconnect?state=' + STATE + '&_csrf_token=' + CSRF,
             processData: false,
             data: authResult['code'],
             contentType: 'application/octet-stream; charset=utf-8',
@@ -38,7 +38,7 @@ function signOutGoogleAcc() {
         back to the main restaurants page*/
         $.ajax({
             type: 'POST',
-            url: '/gdisconnect/',
+            url: '/gdisconnect?_csrf_token=' + CSRF,
             success: function (result) {
                 // Handle or verify the server response if necessary.
                 if (result) {

@@ -2,6 +2,7 @@ import bleach
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError
 
 from database_setup import Users, Base, Items
 
@@ -54,16 +55,6 @@ class ItemsDatabase:
         """
         if name is None:
             name = item.name
-        # checking condition in bleach format as we have stored name in bleached
-        #  form.
-        # checking this condition as user may not want to change item name in
-        # that case bleached.clean(name) == item.name
-        elif bleach.clean(name) != item.name:
-            # checking for same duplication
-            # As name should be unique in our list we have to check other items
-            # if they are having same name or not
-            if self.get_item(bleach.clean(name)) is not None:
-                return False
         if description is None:
             description = item.description
         if category is None:
@@ -74,9 +65,14 @@ class ItemsDatabase:
         item.description = bleach.clean(description)
         item.category = bleach.clean(category)
 
-        self.session.add(item)
-        self.session.commit()
-        return True
+        # trying because user can enter duplicate names
+        try:
+            self.session.add(item)
+            self.session.commit()
+            return True
+        except IntegrityError:
+            self.session.rollback()
+            return False
 
     def add_item(self, name, description, category, user_id):
         """
@@ -92,20 +88,18 @@ class ItemsDatabase:
         item_description = bleach.clean(description)
         item_category = bleach.clean(category)
 
-        # checking for same name
-        # we are checking bleached version because we have stored name in
-        # bleached form in our database
-        # if item in same name exist then function will return false
-        if name == self.get_item(bleach.clean(name)):
+        # trying because user can enter duplicate names
+        try:
+            # creating item object
+            item = Items(name=item_name, description=item_description,
+                         category=item_category, user_id=user_id)
+
+            self.session.add(item)
+            self.session.commit()
+            return True
+        except IntegrityError:
+            self.session.rollback()
             return False
-
-        # creating item object
-        item = Items(name=item_name, description=item_description,
-                     category=item_category, user_id=user_id)
-
-        self.session.add(item)
-        self.session.commit()
-        return True
 
     def delete_item(self, name):
         """this method deletes existing item from our database

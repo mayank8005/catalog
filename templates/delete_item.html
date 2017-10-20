@@ -20,6 +20,10 @@
       <!-- form for adding item -->
       <form method="post">
         Are you sure you want to delete {{item.name}}?<br><br>
+
+        <!-- csrf token -->
+        <input name=_csrf_token type=hidden value="{{ csrf_token() }}">
+
         <!-- submit -->
         <input type="submit" value="delete">
       </form>

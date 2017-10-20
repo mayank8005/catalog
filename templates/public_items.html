@@ -10,6 +10,7 @@
     <!-- init state variable -->
     <script>
       var STATE = '{{STATE}}'
+      var CSRF = '{{ csrf_token() }}'
     </script>
     <!-- adding our own javascript -->
     <script src="{{url_for('static',filename='catalog.js')}}"></script>
@@ -79,7 +80,7 @@
           {% endwith %}
 
     </section>
-    
+
     <!-- content area -->
     <section class="content_panel">
       {% if not items %}

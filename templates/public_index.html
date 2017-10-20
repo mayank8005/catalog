@@ -11,9 +11,12 @@
     <!-- init state variable -->
     <script>
       var STATE = '{{STATE}}'
+      var CSRF = '{{ csrf_token() }}'
     </script>
     <!-- adding our own javascript -->
     <script src="{{url_for('static',filename='catalog.js')}}"></script>
+    <!-- adding our css file -->
+    <link href="{{url_for('static',filename='mystyle.css')}}" rel="stylesheet">
     <title>Catalog</title>
   </head>
   <body>
