@@ -13,7 +13,7 @@ class ItemsDatabase:
         communicate with database"""
 
     def __init__(self):
-        engine = create_engine('sqlite:///catalog.db')
+        engine = create_engine('postgresql://catalog:catalog@localhost/catalog')
         Base.metadata.bind = engine
 
         db_session = sessionmaker(bind=engine)

@@ -17,7 +17,8 @@ CATEGORIES = ['Soccer', 'Basketball', 'Baseball', 'Frisbee', 'Snowboarding',
 
 # storing client id
 
-CLIENT_ID = json.loads(open("client_secret.json").read())['web']['client_id']
+CLIENT_ID = json.loads(open("/var/www/html/client_secret.json").read())['web'][
+    'client_id']
 
 # init Flask instance
 app = Flask(__name__)
@@ -41,8 +42,6 @@ def start_session():
 
         if not token or (token != request.form.get(
                 '_csrf_token') and token != request.args.get('_csrf_token')):
-            print('csrf error')
-            print(request.form)
             abort(403)
 
 
@@ -408,11 +407,13 @@ def generate_csrf_token():
     return login_session['_csrf_token']
 
 
+# adding app variables
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
+app.secret_key = 'super_secret_key'
+
 # will run this part of code only when this file is executed directly
 # will not run if this file is imported to another module/script
 if __name__ == '__main__':
-    app.jinja_env.globals['csrf_token'] = generate_csrf_token
-    app.secret_key = 'super_secret_key'
     port = 5000  # setting port no to listen request
     host = '0.0.0.0'  # setting host address
     app.debug = True
